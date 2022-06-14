@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		18976D753B562E21691466F0 /* Pods_VisualEffectCamera.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97FA6C4777FC8BCE641CFD8 /* Pods_VisualEffectCamera.framework */; };
+		A222B27A2858D5C50037C8C2 /* white.png in Resources */ = {isa = PBXBuildFile; fileRef = A222B2792858D5C50037C8C2 /* white.png */; };
+		A222B27D2858D5E20037C8C2 /* squareFace.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = A222B27B2858D5E20037C8C2 /* squareFace.jpeg */; };
+		A222B27E2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = A222B27C2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg */; };
+		A230A26C282F04360067C140 /* FaceSquareBulge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A230A268282F04360067C140 /* FaceSquareBulge.swift */; };
+		A235CC7728546A77002D29C6 /* FiltersType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A235CC7628546A77002D29C6 /* FiltersType.swift */; };
+		A23CD4152853A23900A2E4EE /* FiltersSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23CD4142853A23900A2E4EE /* FiltersSwitchView.swift */; };
 		A28B770427F7EB1600C5517D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28B770327F7EB1600C5517D /* AppDelegate.swift */; };
 		A28B770827F7EB1600C5517D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28B770727F7EB1600C5517D /* ViewController.swift */; };
 		A28B770B27F7EB1600C5517D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A28B770927F7EB1600C5517D /* Main.storyboard */; };
@@ -19,7 +25,6 @@
 		A2E7763F282DD4E600018C68 /* GPUImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2E77638282DD3FE00018C68 /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2E77642282DD5D900018C68 /* OriangFaceFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E77641282DD5D900018C68 /* OriangFaceFilter.swift */; };
 		A2E77645282DDA1800018C68 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E77644282DDA1800018C68 /* UIUtilities.swift */; };
-		A2E7764B282DDD2900018C68 /* istockphoto-185284489-612x612.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = A2E77647282DDD2900018C68 /* istockphoto-185284489-612x612.jpeg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +95,12 @@
 /* Begin PBXFileReference section */
 		0192E919DF6AA46BBDFDCF13 /* Pods-VisualEffectCamera.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualEffectCamera.release.xcconfig"; path = "Target Support Files/Pods-VisualEffectCamera/Pods-VisualEffectCamera.release.xcconfig"; sourceTree = "<group>"; };
 		2D2B5DF7083FBC2A7A09F38E /* Pods-VisualEffectCamera.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualEffectCamera.debug.xcconfig"; path = "Target Support Files/Pods-VisualEffectCamera/Pods-VisualEffectCamera.debug.xcconfig"; sourceTree = "<group>"; };
+		A222B2792858D5C50037C8C2 /* white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = white.png; path = Filters/white.png; sourceTree = "<group>"; };
+		A222B27B2858D5E20037C8C2 /* squareFace.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = squareFace.jpeg; path = Filters/squareFace.jpeg; sourceTree = "<group>"; };
+		A222B27C2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "istockphoto-185284489-612x612.jpeg"; path = "Filters/istockphoto-185284489-612x612.jpeg"; sourceTree = "<group>"; };
+		A230A268282F04360067C140 /* FaceSquareBulge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FaceSquareBulge.swift; path = Filters/FaceSquareBulge.swift; sourceTree = "<group>"; };
+		A235CC7628546A77002D29C6 /* FiltersType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FiltersType.swift; path = Filters/FiltersType.swift; sourceTree = "<group>"; };
+		A23CD4142853A23900A2E4EE /* FiltersSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersSwitchView.swift; sourceTree = "<group>"; };
 		A28B770027F7EB1600C5517D /* VisualEffectCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualEffectCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A28B770327F7EB1600C5517D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A28B770727F7EB1600C5517D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -105,7 +116,6 @@
 		A2E7762C282DD3FE00018C68 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = framework/GPUImage.xcodeproj; sourceTree = SOURCE_ROOT; };
 		A2E77641282DD5D900018C68 /* OriangFaceFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OriangFaceFilter.swift; path = Filters/OriangFaceFilter.swift; sourceTree = "<group>"; };
 		A2E77644282DDA1800018C68 /* UIUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
-		A2E77647282DDD2900018C68 /* istockphoto-185284489-612x612.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "istockphoto-185284489-612x612.jpeg"; path = "VisualEffectCamera/Filters/istockphoto-185284489-612x612.jpeg"; sourceTree = "<group>"; };
 		D97FA6C4777FC8BCE641CFD8 /* Pods_VisualEffectCamera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualEffectCamera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -143,10 +153,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A23CD4102853A1AC00A2E4EE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A23CD4142853A23900A2E4EE /* FiltersSwitchView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		A28B76F727F7EB1600C5517D = {
 			isa = PBXGroup;
 			children = (
-				A2E77647282DDD2900018C68 /* istockphoto-185284489-612x612.jpeg */,
 				A28B770227F7EB1600C5517D /* VisualEffectCamera */,
 				A28B771927F7EB1900C5517D /* VisualEffectCameraTests */,
 				A28B772327F7EB1900C5517D /* VisualEffectCameraUITests */,
@@ -169,6 +186,7 @@
 		A28B770227F7EB1600C5517D /* VisualEffectCamera */ = {
 			isa = PBXGroup;
 			children = (
+				A23CD4102853A1AC00A2E4EE /* Views */,
 				A2E77643282DD9FB00018C68 /* MLKit */,
 				A2E77640282DD5C100018C68 /* Filters */,
 				A2E7762C282DD3FE00018C68 /* GPUImage.xcodeproj */,
@@ -213,7 +231,12 @@
 		A2E77640282DD5C100018C68 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
+				A222B27C2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg */,
+				A222B27B2858D5E20037C8C2 /* squareFace.jpeg */,
+				A222B2792858D5C50037C8C2 /* white.png */,
+				A230A268282F04360067C140 /* FaceSquareBulge.swift */,
 				A2E77641282DD5D900018C68 /* OriangFaceFilter.swift */,
+				A235CC7628546A77002D29C6 /* FiltersType.swift */,
 			);
 			name = Filters;
 			sourceTree = "<group>";
@@ -381,9 +404,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2E7764B282DDD2900018C68 /* istockphoto-185284489-612x612.jpeg in Resources */,
+				A222B27D2858D5E20037C8C2 /* squareFace.jpeg in Resources */,
 				A28B771027F7EB1900C5517D /* LaunchScreen.storyboard in Resources */,
+				A222B27A2858D5C50037C8C2 /* white.png in Resources */,
 				A28B770D27F7EB1900C5517D /* Assets.xcassets in Resources */,
+				A222B27E2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg in Resources */,
 				A28B770B27F7EB1600C5517D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,7 +495,10 @@
 			files = (
 				A28B770827F7EB1600C5517D /* ViewController.swift in Sources */,
 				A28B770427F7EB1600C5517D /* AppDelegate.swift in Sources */,
+				A23CD4152853A23900A2E4EE /* FiltersSwitchView.swift in Sources */,
+				A230A26C282F04360067C140 /* FaceSquareBulge.swift in Sources */,
 				A2E77645282DDA1800018C68 /* UIUtilities.swift in Sources */,
+				A235CC7728546A77002D29C6 /* FiltersType.swift in Sources */,
 				A2E77642282DD5D900018C68 /* OriangFaceFilter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

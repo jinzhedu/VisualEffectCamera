@@ -5,6 +5,22 @@
 //  Created by du jinzhe on 2022/4/2.
 //
 
+import GPUImage
+#if canImport(OpenGL)
+import OpenGL.GL3
+#endif
+
+#if canImport(OpenGLES)
+import OpenGLES
+#endif
+
+#if canImport(COpenGLES)
+import COpenGLES.gles2
+#endif
+
+#if canImport(COpenGL)
+import COpenGL
+#endif
 import UIKit
 import CoreImage
 import GPUImage
@@ -14,23 +30,76 @@ import MLKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var renderView: RenderView!
+    @IBOutlet weak var filterSwitchView: FiltersSwitchView!
     
     let fbSize = Size(width: 640, height: 480)
-    let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyLow])
-    var shouldDetectFaces = true
+    
     lazy var lineGenerator: LineGenerator = {
         let gen = LineGenerator(size: self.fbSize)
         gen.lineWidth = 5
         return gen
     }()
-    //let saturationFilter = SaturationAdjustment()
-    let saturationFilter = OriangFaceFilter()
-    let saturationFilter2 = OriangFaceFilter()
-    let saturationFilter3 = OriangFaceFilter()
-    let blendFilter = SourceOverBlend()
-    let blendFilter2 = SourceOverBlend()
-    let blendFilter3 = SourceOverBlend()
-    let blendFilter4 = SourceOverBlend()
+    
+    var orangePicture: PictureInput?
+    var leftEyeMattingFilter: OriangFaceFilter?
+    var rightEyeMattingFilter: OriangFaceFilter?
+    var lipMattingFilter: OriangFaceFilter?
+    var blendFilter: SourceOverBlend?
+    var blendFilter2: SourceOverBlend?
+    var blendFilter3: SourceOverBlend?
+    var blendFilter4: SourceOverBlend?
+    var bulgeFilter: FaceSquareBulge?
+    
+    var selectFilterType = FilterType.none {
+        didSet{
+            guard selectFilterType != oldValue else {
+                return
+            }
+            
+            camera.removeAllTargets()
+            leftEyeMattingFilter?.removeAllTargets()
+            leftEyeMattingFilter = nil
+            rightEyeMattingFilter?.removeAllTargets()
+            rightEyeMattingFilter = nil
+            lipMattingFilter?.removeAllTargets()
+            lipMattingFilter = nil
+            blendFilter?.removeAllTargets()
+            blendFilter = nil
+            blendFilter2?.removeAllTargets()
+            blendFilter2 = nil
+            blendFilter3?.removeAllTargets()
+            blendFilter3 = nil
+            blendFilter4?.removeAllTargets()
+            blendFilter4 = nil
+            lineGenerator.removeAllTargets()
+            bulgeFilter?.removeAllTargets()
+            bulgeFilter = nil
+            
+            switch selectFilterType {
+            case .orangeFace:
+                leftEyeMattingFilter = OriangFaceFilter()
+                rightEyeMattingFilter = OriangFaceFilter()
+                lipMattingFilter = OriangFaceFilter()
+                blendFilter = SourceOverBlend()
+                blendFilter2 = SourceOverBlend()
+                blendFilter3 = SourceOverBlend()
+                blendFilter4 = SourceOverBlend()
+                orangePicture = PictureInput(imageName:"istockphoto-185284489-612x612.jpeg")
+                orangePicture!.addTarget(blendFilter4!)
+                orangePicture!.processImage()
+                camera --> leftEyeMattingFilter! --> blendFilter!
+                camera --> lipMattingFilter! --> blendFilter2!
+                lineGenerator --> blendFilter3!
+                camera --> rightEyeMattingFilter! --> blendFilter! --> blendFilter2! --> blendFilter3! --> blendFilter4! --> renderView
+            case .squareFace:
+                bulgeFilter = FaceSquareBulge()
+                camera --> bulgeFilter! --> renderView
+            default:
+                camera --> renderView
+            }
+        }
+    }
+    
     var camera:Camera!
 
     override func viewDidLoad() {
@@ -40,33 +109,25 @@ class ViewController: UIViewController {
             camera = try Camera(sessionPreset:.vga640x480, location:.frontFacing, captureAsYUV:false)
             camera.runBenchmark = true
             camera.delegate = self
-            let blendImage = PictureInput(imageName:"istockphoto-185284489-612x612.jpeg")
-            blendImage.addTarget(blendFilter3)
-            blendImage.processImage()
-            camera --> saturationFilter --> blendFilter --> blendFilter4 --> blendFilter2 --> blendFilter3 --> renderView
-            camera --> saturationFilter2 --> blendFilter
-            camera --> saturationFilter3 --> blendFilter4
-            lineGenerator --> blendFilter2
-            //shouldDetectFaces = faceDetectSwitch.isOn
+            camera --> renderView
             camera.startCapture()
         } catch {
             fatalError("Could not initialize rendering pipeline: \(error)")
         }
+        
+        filterSwitchView.filterItems = [FilterItem(type: .none, imageName: "white.png"), FilterItem(type: .orangeFace, imageName: "istockphoto-185284489-612x612.jpeg"), FilterItem(type: .squareFace, imageName: "squareFace.jpeg")]
+        filterSwitchView.actionDelegate = self
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
 
-    @IBAction func didSwitch(_ sender: UISwitch) {
-        shouldDetectFaces = sender.isOn
-    }
-
     @IBAction func capture(_ sender: AnyObject) {
         print("Capture")
         do {
             let documentsDir = try FileManager.default.url(for:.documentDirectory, in:.userDomainMask, appropriateFor:nil, create:true)
-            saturationFilter.saveNextFrameToURL(URL(string:"TestImage.png", relativeTo:documentsDir)!, format:.png)
+            //saturationFilter.saveNextFrameToURL(URL(string:"TestImage.png", relativeTo:documentsDir)!, format:.png)
         } catch {
             print("Couldn't save image: \(error)")
         }
@@ -75,149 +136,77 @@ class ViewController: UIViewController {
 
 extension ViewController: CameraDelegate {
     func didCaptureBuffer(_ sampleBuffer: CMSampleBuffer) {
-//        guard shouldDetectFaces else {
-//            lineGenerator.renderLines([]) // clear
-//            return
-//        }
-        if let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
-            let visionImage = VisionImage(buffer: sampleBuffer)
-            let orientation = UIUtilities.imageOrientation(
-                fromDevicePosition: camera.location == .frontFacing ? .front : .back
-            )
-            visionImage.orientation = .up
-            let imageWidth = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
-            let imageHeight = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
-//            let attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, CMAttachmentMode(kCMAttachmentMode_ShouldPropagate))!
-//            let img = CIImage(cvPixelBuffer: pixelBuffer, options: attachments as? [String: AnyObject])
-            
-            let options = FaceDetectorOptions()
-            options.landmarkMode = .none
-            options.contourMode = .all
-            options.classificationMode = .none
-            options.performanceMode = .fast
-            let faceDetector = FaceDetector.faceDetector(options: options)
-            var faces: [Face]
-            do {
-              faces = try faceDetector.results(in: visionImage)
-            } catch let error {
-              print("Failed to detect faces with error: \(error.localizedDescription).")
-              lineGenerator.renderLines([])
-              return
-            }
-            guard !faces.isEmpty else {
-              print("On-Device face detector returned no results.")
-              lineGenerator.renderLines([])
-              return
-            }
-            var lines = [Line]()
-            for face in faces {
-                lines = lines + faceLines(face.frame)
-                var vertices: [Float] = [];
-                var texCord: [Float] = [];
-                let flip = CGAffineTransform(translationX: -1, y: -1).scaledBy(x: CGFloat(2/fbSize.height), y: CGFloat(2/fbSize.width))
-                if let leftEyeContour = face.contour(ofType: .leftEye) {
-                  var i = 0
-                  var j = leftEyeContour.points.count - 1
-                    while i <= j {
-                        var point = CGPoint(x: leftEyeContour.points[i].x, y: leftEyeContour.points[i].y)
-                        point = point.applying(flip)
-                        vertices.append(Float(point.x))
-                        vertices.append(Float(point.y))
-                        texCord.append(Float(point.x/2.0 + 0.5))
-                        texCord.append(Float(point.y/2.0 + 0.5))
-                        if i == j {
-                            break
-                        }
-                        point = CGPoint(x: leftEyeContour.points[j].x, y: leftEyeContour.points[j].y)
-                        point = point.applying(flip)
-                        vertices.append(Float(point.x))
-                        vertices.append(Float(point.y))
-                        texCord.append(Float(point.x/2.0 + 0.5))
-                        texCord.append(Float(point.y/2.0 + 0.5))
-                        i+=1
-                        j-=1
-                    }
-                }
-                saturationFilter.imageVertices = vertices;
-                saturationFilter.texCords = texCord;
-                
-                vertices = [];
-                texCord = [];
-                if let rightEyeContour = face.contour(ofType: .rightEye) {
-                  var i = 0
-                  var j = rightEyeContour.points.count - 1
-                    while i <= j {
-                        var point = CGPoint(x: rightEyeContour.points[i].x, y: rightEyeContour.points[i].y)
-                        point = point.applying(flip)
-                        vertices.append(Float(point.x))
-                        vertices.append(Float(point.y))
-                        texCord.append(Float(point.x/2.0 + 0.5))
-                        texCord.append(Float(point.y/2.0 + 0.5))
-                        if i == j {
-                            break
-                        }
-                        point = CGPoint(x: rightEyeContour.points[j].x, y: rightEyeContour.points[j].y)
-                        point = point.applying(flip)
-                        vertices.append(Float(point.x))
-                        vertices.append(Float(point.y))
-                        texCord.append(Float(point.x/2.0 + 0.5))
-                        texCord.append(Float(point.y/2.0 + 0.5))
-                        i+=1
-                        j-=1
-                    }
-                }
-                saturationFilter2.imageVertices = vertices;
-                saturationFilter2.texCords = texCord;
-                
-                vertices = [];
-                texCord = [];
-                if let upper = face.contour(ofType: .upperLipTop), let lower = face.contour(ofType: .lowerLipBottom) {
-                  var i = 0
-                  var j = lower.points.count - 1
-                    while i < upper.points.count && j > -1 {
-                        var point = CGPoint(x: upper.points[i].x, y: upper.points[i].y)
-                        point = point.applying(flip)
-                        vertices.append(Float(point.x))
-                        vertices.append(Float(point.y))
-                        texCord.append(Float(point.x/2.0 + 0.5))
-                        texCord.append(Float(point.y/2.0 + 0.5))
-                        
-                        point = CGPoint(x: lower.points[j].x, y: lower.points[j].y)
-                        point = point.applying(flip)
-                        vertices.append(Float(point.x))
-                        vertices.append(Float(point.y))
-                        texCord.append(Float(point.x/2.0 + 0.5))
-                        texCord.append(Float(point.y/2.0 + 0.5))
-                        i+=1
-                        j-=1
-                    }
-                }
-                saturationFilter3.imageVertices = vertices;
-                saturationFilter3.texCords = texCord;
-            }
-            
-//            var lines = [Line]()
-//            for feature in (faceDetector?.features(in: img, options: [CIDetectorImageOrientation: 6]))! {
-//                if feature is CIFaceFeature {
-//                    lines = lines + faceLines(feature.bounds)
-//                }
-//            }
-            lineGenerator.renderLines(lines)
+        if(selectFilterType == .none) {
+            return
         }
+        
+        var faces = detectFace(sampleBuffer)
+        
+        guard !faces.isEmpty else {
+            print("On-Device face detector returned no results.")
+            
+            bulgeFilter?.square = []
+            bulgeFilter?.count = 0
+            bulgeFilter?.points = []
+            
+            lineGenerator.renderLines([])
+            leftEyeMattingFilter?.imageVertices = []
+            leftEyeMattingFilter?.texCords = []
+            rightEyeMattingFilter?.imageVertices = []
+            rightEyeMattingFilter?.texCords = []
+            lipMattingFilter?.imageVertices = []
+            lipMattingFilter?.texCords = []
+            
+            return
+        }
+        
+        switch selectFilterType {
+        case .orangeFace:
+            configOrangeFaceFilter(faces[0])
+        case .squareFace:
+            configSquareBulgeFilter(faces[0])
+        default:
+            break
+        }
+    }
+    
+    func detectFace(_ sampleBuffer: CMSampleBuffer) -> [Face] {
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            return []
+        }
+        let visionImage = VisionImage(buffer: sampleBuffer)
+        let orientation = UIUtilities.imageOrientation(
+            fromDevicePosition: camera.location == .frontFacing ? .front : .back
+        )
+        visionImage.orientation = .up
+        let imageWidth = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
+        let imageHeight = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
+        let options = FaceDetectorOptions()
+        options.landmarkMode = .none
+        options.contourMode = .all
+        options.classificationMode = .none
+        options.performanceMode = .fast
+        let faceDetector = FaceDetector.faceDetector(options: options)
+        var faces: [Face]
+        do {
+          faces = try faceDetector.results(in: visionImage)
+        } catch let error {
+          print("Failed to detect faces with error: \(error.localizedDescription).")
+          return []
+        }
+        return faces
+    }
+    
+    func transformToVertexCor() -> CGAffineTransform {
+        return CGAffineTransform(translationX: -1, y: -1).scaledBy(x: CGFloat(2/fbSize.height), y: CGFloat(2/fbSize.width))
+    }
+    
+    func transformToTexCor() -> CGAffineTransform {
+        return CGAffineTransform(scaleX: CGFloat(1/fbSize.height), y: CGFloat(1/fbSize.width))
     }
 
     func faceLines(_ bounds: CGRect) -> [Line] {
-        // convert from CoreImage to GL coords
-//        let flip = CGAffineTransform(scaleX: 1, y: -1)
-//        let rotate = flip.rotated(by: CGFloat(-.pi / 2.0))
-//        let translate = rotate.translatedBy(x: -1, y: -1)
-//        let xform = translate.scaledBy(x: CGFloat(2/fbSize.width), y: CGFloat(2/fbSize.height))
-        
-        let flip = CGAffineTransform(scaleX: 1, y: 1)
-//        let rotate = flip.rotated(by: CGFloat(-.pi / 2.0))
-        let translate = flip.translatedBy(x: -1, y: -1)
-        let xform = translate.scaledBy(x: CGFloat(2/fbSize.width), y: CGFloat(2/fbSize.height))
-        let glRect = bounds.applying(translate.scaledBy(x: CGFloat(2/fbSize.height), y: CGFloat(2/fbSize.width)).translatedBy(x: -1, y: -1))
+        let glRect = bounds.applying(transformToVertexCor())
 
         let x = Float(glRect.origin.x)
         let y = Float(glRect.origin.y)
@@ -234,5 +223,116 @@ extension ViewController: CameraDelegate {
                 .segment(p1:br, p2:bl),   // bottom
                 .segment(p1:bl, p2:tl)]   // left
     }
+    
+    func configSquareBulgeFilter(_ face: Face) {
+        let glRect = face.frame.applying(transformToTexCor())
+        let x = GLfloat(glRect.origin.x)
+        let y = GLfloat(glRect.origin.y)
+        let width = GLfloat(glRect.size.width)
+        let height = GLfloat(glRect.size.height)
+        bulgeFilter?.square = [x, y,x + width, y, x, y + height,x + width, y + height]
+        
+        var points = [GLfloat]()
+        if let faceContour = face.contour(ofType: .face) {
+            bulgeFilter?.count = faceContour.points.count
+            for face in faceContour.points {
+                var point = CGPoint(x: face.x, y: face.y)
+                point = point.applying(transformToTexCor())
+                points.append(GLfloat(point.x))
+                points.append(GLfloat(point.y))
+            }
+            bulgeFilter?.points = points;
+        }
+    }
+    
+    func getEyeCords(_ eyeContour: FaceContour) -> (vertices: [Float], texCord: [Float]) {
+        var vertices: [Float] = []
+        var texCord: [Float] = []
+        
+        var i = 0
+        var j = eyeContour.points.count - 1
+        while i <= j {
+          var point = CGPoint(x: eyeContour.points[i].x, y: eyeContour.points[i].y)
+          point = point.applying(transformToVertexCor())
+          vertices.append(Float(point.x))
+          vertices.append(Float(point.y))
+          texCord.append(Float(point.x/2.0 + 0.5))
+          texCord.append(Float(point.y/2.0 + 0.5))
+          if i == j {
+              break
+          }
+          point = CGPoint(x: eyeContour.points[j].x, y: eyeContour.points[j].y)
+          point = point.applying(transformToVertexCor())
+          vertices.append(Float(point.x))
+          vertices.append(Float(point.y))
+          texCord.append(Float(point.x/2.0 + 0.5))
+          texCord.append(Float(point.y/2.0 + 0.5))
+          i+=1
+          j-=1
+        }
+        
+        return (vertices, texCord)
+    }
+    
+    func getLipCords(_ face: Face) -> (vertices: [Float], texCord: [Float]) {
+        var vertices: [Float] = [];
+        var texCord: [Float] = [];
+        if let upper = face.contour(ofType: .upperLipTop), let lower = face.contour(ofType: .lowerLipBottom) {
+          var i = 0
+          var j = lower.points.count - 1
+            while i < upper.points.count && j > -1 {
+                var point = CGPoint(x: upper.points[i].x, y: upper.points[i].y)
+                point = point.applying(transformToVertexCor())
+                vertices.append(Float(point.x))
+                vertices.append(Float(point.y))
+                texCord.append(Float(point.x/2.0 + 0.5))
+                texCord.append(Float(point.y/2.0 + 0.5))
+                
+                point = CGPoint(x: lower.points[j].x, y: lower.points[j].y)
+                point = point.applying(transformToVertexCor())
+                vertices.append(Float(point.x))
+                vertices.append(Float(point.y))
+                texCord.append(Float(point.x/2.0 + 0.5))
+                texCord.append(Float(point.y/2.0 + 0.5))
+                i+=1
+                j-=1
+            }
+        }
+        
+        return (vertices, texCord)
+    }
+    
+    func configOrangeFaceFilter(_ face: Face) {
+        lineGenerator.renderLines(faceLines(face.frame))
+        
+        if let leftEyeContour = face.contour(ofType: .leftEye) {
+            let cords = getEyeCords(leftEyeContour)
+            leftEyeMattingFilter?.imageVertices = cords.vertices
+            leftEyeMattingFilter?.texCords = cords.texCord
+        } else {
+            leftEyeMattingFilter?.imageVertices = []
+            leftEyeMattingFilter?.texCords = []
+        }
+        
+        if let rightEyeContour = face.contour(ofType: .rightEye) {
+            let cords = getEyeCords(rightEyeContour)
+            rightEyeMattingFilter?.imageVertices = cords.vertices
+            rightEyeMattingFilter?.texCords = cords.texCord
+        } else {
+            rightEyeMattingFilter?.imageVertices = []
+            rightEyeMattingFilter?.texCords = []
+        }
+        
+        let cords = getLipCords(face)
+        lipMattingFilter?.imageVertices = cords.vertices
+        lipMattingFilter?.texCords = cords.texCord
+    }
 }
+
+extension ViewController: FiltersSwitchDelegate {
+    func switchTo(filter: FilterType) {
+        selectFilterType = filter
+    }
+}
+
 

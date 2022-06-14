@@ -38,9 +38,9 @@ public class OpenGLContext: SerialDispatch {
         
         let generatedContext:EAGLContext?
         if let shareGroup = imageProcessingShareGroup {
-            generatedContext = EAGLContext(api:.openGLES2, sharegroup:shareGroup)
+            generatedContext = EAGLContext(api:.openGLES3, sharegroup:shareGroup)
         } else {
-            generatedContext = EAGLContext(api:.openGLES2)
+            generatedContext = EAGLContext(api:.openGLES3)
         }
         
         guard let concreteGeneratedContext = generatedContext else {

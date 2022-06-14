@@ -171,4 +171,8 @@ public class PictureInput: ImageSource {
             target.newFramebufferAvailable(imageFramebuffer, fromSourceIndex:atIndex)
         }
     }
+    
+    deinit {
+        debugPrint("Deallocating PictureInput: \(self)")
+    }
 }

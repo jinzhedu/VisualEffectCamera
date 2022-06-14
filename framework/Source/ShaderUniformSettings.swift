@@ -54,6 +54,11 @@ public struct ShaderUniformSettings {
         get { return uniformValues[index] as? Matrix3x3}
         set(newValue) { uniformValues[index] = newValue }
     }
+    
+    public subscript(index:String) -> [GLfloat]? {
+        get { return uniformValues[index] as? [GLfloat]}
+        set(newValue) { uniformValues[index] = newValue }
+    }
 
     public func restoreShaderSettings(_ shader:ShaderProgram) {
         for (uniform, value) in uniformValues {
@@ -65,6 +70,7 @@ public struct ShaderUniformSettings {
                 case let value as Size: shader.setValue(value.toGLArray(), forUniform:uniform)
                 case let value as Matrix4x4: shader.setMatrix(value.toRowMajorGLArray(), forUniform:uniform)
                 case let value as Matrix3x3: shader.setMatrix(value.toRowMajorGLArray(), forUniform:uniform)
+                case let value as [GLfloat]: shader.setValue(value, forUniform:uniform)
                 default: fatalError("Somehow tried to restore a shader uniform value of an unsupported type: \(value)")
             }
         }
