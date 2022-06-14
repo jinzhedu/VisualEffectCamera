@@ -1,6 +1,7 @@
 # VisualEffectCamera
 A iOS filter camera based on GPUImage2 and MLkit.  
-Features done by now:  
+
+Features done by now:
 1. An instagram-like scrollable filter selection view
 
 Filters done by now:  
