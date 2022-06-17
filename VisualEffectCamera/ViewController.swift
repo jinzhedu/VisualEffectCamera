@@ -34,6 +34,8 @@ class ViewController: UIViewController {
     
     let fbSize = Size(width: 640, height: 480)
     
+    var panFaceView: PanFaceView?
+    
     lazy var lineGenerator: LineGenerator = {
         let gen = LineGenerator(size: self.fbSize)
         gen.lineWidth = 5
@@ -49,6 +51,7 @@ class ViewController: UIViewController {
     var blendFilter3: SourceOverBlend?
     var blendFilter4: SourceOverBlend?
     var bulgeFilter: FaceSquareBulge?
+    var panFaceFilter: PanFaceFilter?
     
     var selectFilterType = FilterType.none {
         didSet{
@@ -75,6 +78,8 @@ class ViewController: UIViewController {
             bulgeFilter?.removeAllTargets()
             bulgeFilter = nil
             
+            clearPanFaceFilter()
+            
             switch selectFilterType {
             case .orangeFace:
                 leftEyeMattingFilter = OriangFaceFilter()
@@ -94,6 +99,8 @@ class ViewController: UIViewController {
             case .squareFace:
                 bulgeFilter = FaceSquareBulge()
                 camera --> bulgeFilter! --> renderView
+            case .panFace:
+                setupPanFaceFilter()
             default:
                 camera --> renderView
             }
@@ -115,7 +122,7 @@ class ViewController: UIViewController {
             fatalError("Could not initialize rendering pipeline: \(error)")
         }
         
-        filterSwitchView.filterItems = [FilterItem(type: .none, imageName: "white.png"), FilterItem(type: .orangeFace, imageName: "istockphoto-185284489-612x612.jpeg"), FilterItem(type: .squareFace, imageName: "squareFace.jpeg")]
+        filterSwitchView.filterItems = [FilterItem(type: .none, imageName: "white.png"), FilterItem(type: .orangeFace, imageName: "istockphoto-185284489-612x612.jpeg"), FilterItem(type: .squareFace, imageName: "squareFace.jpeg"), FilterItem(type: .panFace, imageName: "panFace.png")]
         filterSwitchView.actionDelegate = self
     }
 
@@ -157,6 +164,8 @@ extension ViewController: CameraDelegate {
             lipMattingFilter?.imageVertices = []
             lipMattingFilter?.texCords = []
             
+            resetPanFaceFilter()
+            
             return
         }
         
@@ -165,6 +174,8 @@ extension ViewController: CameraDelegate {
             configOrangeFaceFilter(faces[0])
         case .squareFace:
             configSquareBulgeFilter(faces[0])
+        case .panFace:
+            configPanFaceFilter(faces[0])
         default:
             break
         }
@@ -245,15 +256,17 @@ extension ViewController: CameraDelegate {
         }
     }
     
-    func getEyeCords(_ eyeContour: FaceContour) -> (vertices: [Float], texCord: [Float]) {
+    func getElementCords(_ eyeContour: FaceContour, translate: CGPoint = CGPoint(x: 0, y: 0)) -> (vertices: [Float], texCord: [Float]) {
         var vertices: [Float] = []
         var texCord: [Float] = []
+        
+        let vertexTransform = transformToVertexCor()
         
         var i = 0
         var j = eyeContour.points.count - 1
         while i <= j {
           var point = CGPoint(x: eyeContour.points[i].x, y: eyeContour.points[i].y)
-          point = point.applying(transformToVertexCor())
+          point = point.applying(vertexTransform)
           vertices.append(Float(point.x))
           vertices.append(Float(point.y))
           texCord.append(Float(point.x/2.0 + 0.5))
@@ -262,7 +275,7 @@ extension ViewController: CameraDelegate {
               break
           }
           point = CGPoint(x: eyeContour.points[j].x, y: eyeContour.points[j].y)
-          point = point.applying(transformToVertexCor())
+          point = point.applying(vertexTransform)
           vertices.append(Float(point.x))
           vertices.append(Float(point.y))
           texCord.append(Float(point.x/2.0 + 0.5))
@@ -277,19 +290,22 @@ extension ViewController: CameraDelegate {
     func getLipCords(_ face: Face) -> (vertices: [Float], texCord: [Float]) {
         var vertices: [Float] = [];
         var texCord: [Float] = [];
+        
+        let vertexTransform = transformToVertexCor()
+        
         if let upper = face.contour(ofType: .upperLipTop), let lower = face.contour(ofType: .lowerLipBottom) {
           var i = 0
           var j = lower.points.count - 1
             while i < upper.points.count && j > -1 {
                 var point = CGPoint(x: upper.points[i].x, y: upper.points[i].y)
-                point = point.applying(transformToVertexCor())
+                point = point.applying(vertexTransform)
                 vertices.append(Float(point.x))
                 vertices.append(Float(point.y))
                 texCord.append(Float(point.x/2.0 + 0.5))
                 texCord.append(Float(point.y/2.0 + 0.5))
                 
                 point = CGPoint(x: lower.points[j].x, y: lower.points[j].y)
-                point = point.applying(transformToVertexCor())
+                point = point.applying(vertexTransform)
                 vertices.append(Float(point.x))
                 vertices.append(Float(point.y))
                 texCord.append(Float(point.x/2.0 + 0.5))
@@ -306,7 +322,7 @@ extension ViewController: CameraDelegate {
         lineGenerator.renderLines(faceLines(face.frame))
         
         if let leftEyeContour = face.contour(ofType: .leftEye) {
-            let cords = getEyeCords(leftEyeContour)
+            let cords = getElementCords(leftEyeContour)
             leftEyeMattingFilter?.imageVertices = cords.vertices
             leftEyeMattingFilter?.texCords = cords.texCord
         } else {
@@ -315,7 +331,7 @@ extension ViewController: CameraDelegate {
         }
         
         if let rightEyeContour = face.contour(ofType: .rightEye) {
-            let cords = getEyeCords(rightEyeContour)
+            let cords = getElementCords(rightEyeContour)
             rightEyeMattingFilter?.imageVertices = cords.vertices
             rightEyeMattingFilter?.texCords = cords.texCord
         } else {

@@ -11,9 +11,12 @@
 		A222B27A2858D5C50037C8C2 /* white.png in Resources */ = {isa = PBXBuildFile; fileRef = A222B2792858D5C50037C8C2 /* white.png */; };
 		A222B27D2858D5E20037C8C2 /* squareFace.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = A222B27B2858D5E20037C8C2 /* squareFace.jpeg */; };
 		A222B27E2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = A222B27C2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg */; };
+		A222B281285A091F0037C8C2 /* ViewController+PanFaceFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A222B280285A091F0037C8C2 /* ViewController+PanFaceFilter.swift */; };
+		A222B286285A27BB0037C8C2 /* PanFaceFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A222B285285A27BB0037C8C2 /* PanFaceFilter.swift */; };
 		A230A26C282F04360067C140 /* FaceSquareBulge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A230A268282F04360067C140 /* FaceSquareBulge.swift */; };
 		A235CC7728546A77002D29C6 /* FiltersType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A235CC7628546A77002D29C6 /* FiltersType.swift */; };
 		A23CD4152853A23900A2E4EE /* FiltersSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23CD4142853A23900A2E4EE /* FiltersSwitchView.swift */; };
+		A282284B285D493A0038EB45 /* panFace.png in Resources */ = {isa = PBXBuildFile; fileRef = A2822847285D493A0038EB45 /* panFace.png */; };
 		A28B770427F7EB1600C5517D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28B770327F7EB1600C5517D /* AppDelegate.swift */; };
 		A28B770827F7EB1600C5517D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28B770727F7EB1600C5517D /* ViewController.swift */; };
 		A28B770B27F7EB1600C5517D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A28B770927F7EB1600C5517D /* Main.storyboard */; };
@@ -22,6 +25,7 @@
 		A28B771B27F7EB1900C5517D /* VisualEffectCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28B771A27F7EB1900C5517D /* VisualEffectCameraTests.swift */; };
 		A28B772527F7EB1900C5517D /* VisualEffectCameraUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28B772427F7EB1900C5517D /* VisualEffectCameraUITests.swift */; };
 		A28B772727F7EB1900C5517D /* VisualEffectCameraUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28B772627F7EB1900C5517D /* VisualEffectCameraUITestsLaunchTests.swift */; };
+		A29B919D285BDD89009580B3 /* PanFaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29B919C285BDD89009580B3 /* PanFaceView.swift */; };
 		A2E7763F282DD4E600018C68 /* GPUImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2E77638282DD3FE00018C68 /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2E77642282DD5D900018C68 /* OriangFaceFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E77641282DD5D900018C68 /* OriangFaceFilter.swift */; };
 		A2E77645282DDA1800018C68 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E77644282DDA1800018C68 /* UIUtilities.swift */; };
@@ -98,9 +102,12 @@
 		A222B2792858D5C50037C8C2 /* white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = white.png; path = Filters/white.png; sourceTree = "<group>"; };
 		A222B27B2858D5E20037C8C2 /* squareFace.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = squareFace.jpeg; path = Filters/squareFace.jpeg; sourceTree = "<group>"; };
 		A222B27C2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "istockphoto-185284489-612x612.jpeg"; path = "Filters/istockphoto-185284489-612x612.jpeg"; sourceTree = "<group>"; };
+		A222B280285A091F0037C8C2 /* ViewController+PanFaceFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+PanFaceFilter.swift"; sourceTree = "<group>"; };
+		A222B285285A27BB0037C8C2 /* PanFaceFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PanFaceFilter.swift; path = Filters/PanFaceFilter.swift; sourceTree = "<group>"; };
 		A230A268282F04360067C140 /* FaceSquareBulge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FaceSquareBulge.swift; path = Filters/FaceSquareBulge.swift; sourceTree = "<group>"; };
 		A235CC7628546A77002D29C6 /* FiltersType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FiltersType.swift; path = Filters/FiltersType.swift; sourceTree = "<group>"; };
 		A23CD4142853A23900A2E4EE /* FiltersSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersSwitchView.swift; sourceTree = "<group>"; };
+		A2822847285D493A0038EB45 /* panFace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = panFace.png; path = Filters/panFace.png; sourceTree = "<group>"; };
 		A28B770027F7EB1600C5517D /* VisualEffectCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualEffectCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A28B770327F7EB1600C5517D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A28B770727F7EB1600C5517D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -113,6 +120,7 @@
 		A28B772027F7EB1900C5517D /* VisualEffectCameraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VisualEffectCameraUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A28B772427F7EB1900C5517D /* VisualEffectCameraUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectCameraUITests.swift; sourceTree = "<group>"; };
 		A28B772627F7EB1900C5517D /* VisualEffectCameraUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectCameraUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A29B919C285BDD89009580B3 /* PanFaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanFaceView.swift; sourceTree = "<group>"; };
 		A2E7762C282DD3FE00018C68 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = framework/GPUImage.xcodeproj; sourceTree = SOURCE_ROOT; };
 		A2E77641282DD5D900018C68 /* OriangFaceFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OriangFaceFilter.swift; path = Filters/OriangFaceFilter.swift; sourceTree = "<group>"; };
 		A2E77644282DDA1800018C68 /* UIUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
@@ -157,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				A23CD4142853A23900A2E4EE /* FiltersSwitchView.swift */,
+				A29B919C285BDD89009580B3 /* PanFaceView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -192,6 +201,7 @@
 				A2E7762C282DD3FE00018C68 /* GPUImage.xcodeproj */,
 				A28B770327F7EB1600C5517D /* AppDelegate.swift */,
 				A28B770727F7EB1600C5517D /* ViewController.swift */,
+				A222B280285A091F0037C8C2 /* ViewController+PanFaceFilter.swift */,
 				A28B770927F7EB1600C5517D /* Main.storyboard */,
 				A28B770C27F7EB1900C5517D /* Assets.xcassets */,
 				A28B770E27F7EB1900C5517D /* LaunchScreen.storyboard */,
@@ -231,12 +241,14 @@
 		A2E77640282DD5C100018C68 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
+				A2822847285D493A0038EB45 /* panFace.png */,
 				A222B27C2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg */,
 				A222B27B2858D5E20037C8C2 /* squareFace.jpeg */,
 				A222B2792858D5C50037C8C2 /* white.png */,
 				A230A268282F04360067C140 /* FaceSquareBulge.swift */,
 				A2E77641282DD5D900018C68 /* OriangFaceFilter.swift */,
 				A235CC7628546A77002D29C6 /* FiltersType.swift */,
+				A222B285285A27BB0037C8C2 /* PanFaceFilter.swift */,
 			);
 			name = Filters;
 			sourceTree = "<group>";
@@ -408,6 +420,7 @@
 				A28B771027F7EB1900C5517D /* LaunchScreen.storyboard in Resources */,
 				A222B27A2858D5C50037C8C2 /* white.png in Resources */,
 				A28B770D27F7EB1900C5517D /* Assets.xcassets in Resources */,
+				A282284B285D493A0038EB45 /* panFace.png in Resources */,
 				A222B27E2858D5E20037C8C2 /* istockphoto-185284489-612x612.jpeg in Resources */,
 				A28B770B27F7EB1600C5517D /* Main.storyboard in Resources */,
 			);
@@ -500,6 +513,9 @@
 				A2E77645282DDA1800018C68 /* UIUtilities.swift in Sources */,
 				A235CC7728546A77002D29C6 /* FiltersType.swift in Sources */,
 				A2E77642282DD5D900018C68 /* OriangFaceFilter.swift in Sources */,
+				A29B919D285BDD89009580B3 /* PanFaceView.swift in Sources */,
+				A222B281285A091F0037C8C2 /* ViewController+PanFaceFilter.swift in Sources */,
+				A222B286285A27BB0037C8C2 /* PanFaceFilter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

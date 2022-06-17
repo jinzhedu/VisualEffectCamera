@@ -8,5 +8,5 @@
 import Foundation
 
 enum FilterType {
-    case none, orangeFace, squareFace
+    case none, orangeFace, squareFace, panFace
 }
